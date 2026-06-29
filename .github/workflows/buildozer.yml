@@ -1,32 +1,20 @@
-name: Build APK
+name: CI
 on:
   push:
     branches: [ main ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - name: Build with Buildozer
         run: |
           sudo apt-get update
           sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev
           pip3 install --upgrade buildozer cython
-          
-          # Налаштування SDK
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
-          
-          # Прийняття ліцензій
-          yes | /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --sdk_root=/home/runner/.buildozer/android/platform/android-sdk --licenses || true
-          yes | /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --sdk_root=/home/runner/.buildozer/android/platform/android-sdk "build-tools;37.0.0" || true
-          
-          # Збірка
+          yes | sdkmanager --licenses || true
+          yes | sdkmanager "build-tools;37.0.0" || true
           buildozer -v android debug
-      
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: bin/*.apk
