@@ -15,15 +15,13 @@ jobs:
           pip3 install --user --upgrade buildozer cython
       
       - name: Build with Buildozer
-        run: |
-          mkdir -p ~/.android && touch ~/.android/repositories.cfg
-          # Оновлюємо автоінструменти для libffi перед збіркою
-          export LIBFFI_DIR=$(find /home/runner/work/YT_Guide_App/YT_Guide_App/.buildozer/ -name "libffi" | head -n 1)
-          if [ -d "$LIBFFI_DIR" ]; then
-            cd $LIBFFI_DIR && autoreconf -vfi && cd -
-          fi
-          # Запускаємо збірку
-          yes | buildozer -v android debug
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          command: buildozer -v android debug
+        env:
+          ANDROID_KEYSTORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          ANDROID_KEY_PASS: ${{ secrets.ANDROID_KEY_PASS }}
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
