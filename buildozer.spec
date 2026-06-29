@@ -115,7 +115,7 @@ fullscreen = 0
 #android.minapi = 24
 
 # (int) Android SDK version to use
-#android.sdk = 33
+android.sdk = 33
 
 # (str) Android NDK version to use
 android.ndk = 25b
@@ -135,7 +135,7 @@ android.ndk_api = 21
 # (bool) If True, then skip trying to update the Android SDK
 # This can be useful to avoid excess Internet downloads or save time
 # when an update is due and you just want to test/build your package
-# android.skip_update = False
+android.skip_update = True
 
 # (bool) If True, then automatically accept SDK license
 # agreements. This is intended for automation only. If set to False,
