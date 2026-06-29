@@ -17,6 +17,12 @@ jobs:
       - name: Build with Buildozer
         run: |
           mkdir -p ~/.android && touch ~/.android/repositories.cfg
+          # Оновлюємо автоінструменти для libffi перед збіркою
+          export LIBFFI_DIR=$(find /home/runner/work/YT_Guide_App/YT_Guide_App/.buildozer/ -name "libffi" | head -n 1)
+          if [ -d "$LIBFFI_DIR" ]; then
+            cd $LIBFFI_DIR && autoreconf -vfi && cd -
+          fi
+          # Запускаємо збірку
           yes | buildozer -v android debug
       
       - name: Upload APK
