@@ -19,7 +19,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev
           pip3 install --upgrade buildozer cython
-          mkdir -p ~/.android && touch ~/.android/repositories.cfg
+          
+          # ОЦЕЙ БЛОК ВИРІШУЄ ПРОБЛЕМУ ЛІЦЕНЗІЙ:
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          yes | /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --sdk_root=/home/runner/.buildozer/android/platform/android-sdk --licenses || true
+          
+          # Запуск самої збірки
           buildozer -v android debug
       
       - name: Upload APK
