@@ -14,15 +14,15 @@ jobs:
           sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev
           pip3 install --upgrade buildozer cython
           
-          # 1. Запускаємо buildozer перший раз, щоб він створив структуру папок
-          # Ми очікуємо помилку, тому ігноруємо її через || true
-          buildozer android debug || true
+          # Створюємо структуру папок для ліцензій
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
           
-          # 2. Тепер, коли папки створені, приймаємо ліцензії (якщо sdkmanager існує)
-          SDKMGR=$(find /home/runner/.buildozer/ -name "sdkmanager" | head -n 1)
-          if [ -f "$SDKMGR" ]; then
-            yes | $SDKMGR --licenses || true
-          fi
+          # Створюємо файли ліцензій вручну (це обхід захисту)
+          echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          echo "d56f5187473751e9e735423f66c98c199573c099" >> /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" >> /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
           
-          # 3. Фінальна збірка
+          # Запуск збірки
           buildozer -v android debug
